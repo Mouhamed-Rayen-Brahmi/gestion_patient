@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: common-header('My Sessions')"></head>
+<body class="d-flex flex-column min-vh-100">
+    <nav th:replace="fragments/navigation :: user-nav"></nav>
+
+    <div class="container mt-4 fade-in">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0">
+                        <i class="bi bi-calendar2-week me-2"></i>
+                        My Sessions
+                    </h1>
+                    <a href="/seances/request" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Request New Session
+                    </a>
+                </div>
+                
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 fw-bold">
+                            <i class="bi bi-list-check me-2"></i>
+                            All Sessions
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Date</th>
+                                        <th>Treatment</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:if="${seances == null || seances.empty}">
+                                        <td colspan="5" class="text-center">
+                                            <div class="alert alert-info mb-0">
+                                                <i class="bi bi-info-circle me-2"></i>
+                                                No sessions found
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr th:each="seance : ${seances}">
+                                        <td th:text="${seance.id}"></td>
+                                        <td th:text="${seance.dateSoin}"></td>
+                                        <td th:text="${seance.codeSoin}"></td>
+                                        <td>
+                                            <span class="badge" th:classappend="${seance.status == 'PLANNED' ? 'bg-primary' : 
+                                                                              seance.status == 'IN_PROGRESS' ? 'bg-warning' : 
+                                                                              seance.status == 'COMPLETED' ? 'bg-success' :
+                                                                              seance.status == 'WAITING_APPROVAL' ? 'bg-info' : 'bg-danger'}"
+                                                  th:text="${seance.status}">
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/seances/{id}(id=${seance.id})}" class="btn btn-sm btn-outline-info">
+                                                <i class="bi bi-eye"></i> View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="/dashboard" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: common-footer"></div>
+</body>
+</html>

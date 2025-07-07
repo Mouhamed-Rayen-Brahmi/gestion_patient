@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: common-header('Request New Session')"></head>
+<body class="d-flex flex-column min-vh-100">
+    <nav th:replace="fragments/navigation :: user-nav"></nav>
+
+    <div class="container mt-4 fade-in">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Request New Session
+                    </h1>
+                </div>
+                
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <span th:text="${success}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 fw-bold">
+                            <i class="bi bi-calendar-plus me-2"></i>
+                            New Session Request
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/seances/request}" method="post" class="needs-validation" novalidate>
+                            <div class="mb-4">
+                                <label for="codeSoin" class="form-label">
+                                    <i class="bi bi-bandaid me-2"></i>Treatment Type
+                                </label>
+                                <select class="form-select" id="codeSoin" name="codeSoin" required>
+                                    <option value="">Select Treatment</option>
+                                    <option th:each="soin : ${soins}" th:value="${soin.codeSoin}" th:text="${soin.designation}"></option>
+                                </select>
+                                <div class="invalid-feedback">Please select a treatment type.</div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="dateSoin" class="form-label">
+                                    <i class="bi bi-calendar2-date me-2"></i>Preferred Date
+                                </label>
+                                <input type="date" class="form-control" id="dateSoin" name="dateSoin" required>
+                                <div class="invalid-feedback">Please select a valid date.</div>
+                                <small class="text-muted">Please select a date at least 24 hours in advance.</small>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="notes" class="form-label">
+                                    <i class="bi bi-chat-left-text me-2"></i>Notes
+                                </label>
+                                <textarea class="form-control" id="notes" name="notes" rows="4" 
+                                          placeholder="Reason for treatment, special requirements, etc."></textarea>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-send me-1"></i> Submit Request
+                                </button>
+                                <a href="/seances" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle me-1"></i> Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: common-footer"></div>
+    
+    <script>
+        (function () {
+            'use strict'
+            
+            var forms = document.querySelectorAll('.needs-validation')
+            
+            const datePicker = document.getElementById('dateSoin');
+            if (datePicker) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                datePicker.min = tomorrow.toISOString().split('T')[0];
+            }
+            
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: common-header('Session Details')"></head>
+<body class="d-flex flex-column min-vh-100">
+    <nav th:replace="fragments/navigation :: user-nav"></nav>
+
+    <div class="container mt-4 fade-in">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Session Details
+                    </h1>
+                </div>
+                
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                <div th:if="${seance}" class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 fw-bold">
+                            <i class="bi bi-card-text me-2"></i>
+                            Session #<span th:text="${seance.id}"></span>
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex justify-content-between">
+                                <span class="fw-bold"><i class="bi bi-calendar2-date me-2"></i>Date:</span>
+                                <span th:text="${seance.dateSoin}"></span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between">
+                                <span class="fw-bold"><i class="bi bi-bandaid me-2"></i>Treatment:</span>
+                                <span th:text="${seance.codeSoin}"></span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between">
+                                <span class="fw-bold"><i class="bi bi-tag me-2"></i>Status:</span>
+                                <span class="badge" th:classappend="${seance.status == 'PLANNED' ? 'bg-primary' : 
+                                                                  seance.status == 'IN_PROGRESS' ? 'bg-warning' : 
+                                                                  seance.status == 'COMPLETED' ? 'bg-success' :
+                                                                  seance.status == 'WAITING_APPROVAL' ? 'bg-info' : 'bg-danger'}"
+                                      th:text="${seance.status}">
+                                </span>
+                            </div>
+                            <div class="list-group-item" th:if="${seance.notes}">
+                                <div class="fw-bold mb-2"><i class="bi bi-chat-left-text me-2"></i>Notes:</div>
+                                <div class="border rounded p-3" th:text="${seance.notes}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex gap-2">
+                    <a href="/seances" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Back to Sessions List
+                    </a>
+                    
+                    <button th:if="${seance != null && (seance.status == 'WAITING_APPROVAL' || seance.status == 'PLANNED')}" 
+                            class="btn btn-danger" onclick="cancelSession()">
+                        <i class="bi bi-x-circle me-1"></i> Cancel Session
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="cancelSessionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Confirm Cancellation</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to cancel this session? This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep Session</button>
+                    <form th:action="@{/seances/{id}/cancel(id=${seance != null ? seance.id : ''})}" method="post">
+                        <button type="submit" class="btn btn-danger">Yes, Cancel Session</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: common-footer"></div>
+    
+    <script>
+        function cancelSession() {
+            new bootstrap.Modal(document.getElementById('cancelSessionModal')).show();
+        }
+    </script>
+</body>
+</html>

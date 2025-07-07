@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: common-header('Register')"></head>
+<body>
+    <nav th:replace="fragments/navigation :: auth-nav"></nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <h4 class="mb-0"><i class="bi bi-person-plus me-2"></i>Create Account</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <span th:text="${error}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <span th:text="${success}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        
+                        <form method="post" action="/register" th:object="${user}" class="needs-validation" novalidate>
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-person me-2"></i>Full Name
+                                </label>
+                                <input type="text" th:field="*{name}" class="form-control form-control-lg" required>
+                                <div class="invalid-feedback">Please enter your name</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="bi bi-envelope me-2"></i>Email Address
+                                </label>
+                                <input type="email" th:field="*{email}" class="form-control form-control-lg" required>
+                                <div class="invalid-feedback">Please enter a valid email</div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <i class="bi bi-lock me-2"></i>Password
+                                </label>
+                                <input type="password" th:field="*{password}" class="form-control form-control-lg" required>
+                                <div class="invalid-feedback">Please enter a password</div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-person-check me-2"></i>Register
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="text-center mt-4">
+                            <p>Already have an account? <a th:href="@{/login}" class="text-primary">Login here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: common-footer"></div>
+    
+    <script>
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+</body>
+</html>

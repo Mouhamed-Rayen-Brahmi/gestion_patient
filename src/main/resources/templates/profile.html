@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: common-header('User Profile')"></head>
+<body class="d-flex flex-column min-vh-100">
+    <nav th:replace="fragments/navigation :: user-nav"></nav>
+
+    <div class="container mt-4 fade-in">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0">
+                        <i class="bi bi-person-circle me-2"></i>
+                        My Profile
+                    </h1>
+                </div>
+                
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <span th:text="${success}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 fw-bold">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Profile Information
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/profile/update}" method="post" class="needs-validation" novalidate>
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <i class="bi bi-person me-2"></i>Full Name
+                                </label>
+                                <input type="text" name="name" class="form-control" th:value="${user.name}" required>
+                                <div class="invalid-feedback">Please enter your name</div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <i class="bi bi-envelope me-2"></i>Email Address
+                                </label>
+                                <input type="email" class="form-control" th:value="${user.email}" disabled>
+                                <div class="form-text">Email address cannot be changed</div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <i class="bi bi-shield-lock me-2"></i>Role
+                                </label>
+                                <input type="text" class="form-control" th:value="${user.role}" disabled>
+                            </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-1"></i> Update Profile
+                                </button>
+                                <a href="/dashboard" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 fw-bold">
+                            <i class="bi bi-lock me-2"></i>
+                            Change Password
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/profile/change-password}" method="post" class="needs-validation" novalidate>
+                            <div class="mb-4">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" name="currentPassword" class="form-control" required>
+                                <div class="invalid-feedback">Please enter your current password</div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">New Password</label>
+                                <input type="password" name="newPassword" class="form-control" required>
+                                <div class="invalid-feedback">Please enter a new password</div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" name="confirmPassword" class="form-control" required>
+                                <div class="invalid-feedback">Please confirm your new password</div>
+                            </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-shield-check me-1"></i> Change Password
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: common-footer"></div>
+    
+    <script>
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+</body>
+</html>
