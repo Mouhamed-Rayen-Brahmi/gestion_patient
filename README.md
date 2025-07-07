@@ -31,4 +31,4 @@ A Spring Boot web application for managing patient appointments and treatments w
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/Mouhamed-Rayen-Brahmi/gestion_patient.git
-cd patient-management-system
+cd gestion_patient
